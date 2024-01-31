@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="SeaBattle-master">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/JCDP-1.25-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jansi-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
