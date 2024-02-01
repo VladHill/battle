@@ -24,6 +24,8 @@ public class Battle {
 
     private static final char[][] computerField = new char[sizeOfField][sizeOfField];
     private static final char[][] playerField = new char[sizeOfField][sizeOfField];
+    private static final char[][] playerField2 = new char[sizeOfField][sizeOfField];
+
 
     public static char getShip() {
         return ship;
@@ -44,6 +46,9 @@ public class Battle {
     public static char[][] getPlayerField() {
         return playerField;
     }
+    public static String player1Name;
+    public static String player2Name;
+
 
     public static void main(String[] args){
 
@@ -53,18 +58,19 @@ public class Battle {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String answer;
-            System.out.print("multiplayer or bot? [m/b] ");
-            answer = reader.readLine();
-            if ("b".equals(answer.toLowerCase()) || "".equals(answer)){
-                System.out.println("name?");
-                String player1Name = reader.readLine();
-                System.out.println("Hello, " + player1Name + "!");
+            System.out.println("Enter your name?");
+            player1Name = reader.readLine();
+            System.out.println("Hello, " + player1Name + "!");
+
+
+
+
 
             while (true) {
-                // clear all data in ship class (actually for for repeated plays)
+
                 ComputersShips.clearAll();
                 PlayersShips.clearAll();
-                System.out.print("sam or avto korabli [Y/n] ");
+                System.out.print(player1Name + ", will you arrange the ships yourself or automatically? [Y/n(auto)]: ");
                 answer = reader.readLine();
                 if ("y".equals(answer.toLowerCase()) || "".equals(answer)) {
 
@@ -76,6 +82,7 @@ public class Battle {
                 generateComputersField();
 
 
+
                 while (PlayersShips.countAliveShip != 0 && ComputersShips.countAliveShip != 0) {
                     playerFireAndCheck(reader);
                     if (ComputersShips.countAliveShip != 0) {
@@ -83,24 +90,13 @@ public class Battle {
                     }
                 }
 
-                System.out.print("snova? Y/n: ");
+                System.out.print("Play again? [Y/n]: ");
                 answer = reader.readLine();
                 if (!("y".equals(answer.toLowerCase()) || "".equals(answer))) {
                     break;
                 }
             }
-            }else{
-                System.out.println("name1");
-                String player1Name = reader.readLine();
-                System.out.println("Hello, " + player1Name + "!");
 
-                System.out.println("name2");
-                String player2Name = reader.readLine();
-                System.out.println("Hello, " + player2Name + "!");
-
-
-
-            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -164,13 +160,13 @@ public class Battle {
                 PlayersShips.countOfDestroyer : countOfDecker == 3 ? PlayersShips.countOfCruiser : PlayersShips.countOfBattleShip;
 
         while (countOfShip < maxCountOfShip) {
-            System.out.println(String.format("stav korabl %s!", countOfDecker == 1 ? "submarine" : countOfDecker == 2 ?
+            System.out.println(String.format("Arrange the ships %s!", countOfDecker == 1 ? "submarine" : countOfDecker == 2 ?
                     "destroyer" : countOfDecker == 3 ? "cruiser" : "battleship"));
 
             if (countOfDecker != 1) {
-                System.out.println("v kakyu storonu povernut' (n for north, e - east, s - south, w - west)" + NEWLINE + "napr: d2 e");
+                System.out.println("Which way to turn the ships? (n for north, e - east, s - south, w - west)" + NEWLINE + "For example: d2 e");
             } else {
-                System.out.println("koords" + NEWLINE + "npr: d2");
+                System.out.println("Coordinates" + NEWLINE + "For example: d2");
             }
 
             String parameters = reader.readLine();
@@ -187,13 +183,13 @@ public class Battle {
                 letter = Character.toLowerCase(coordinates.charAt(0)) - 97;                      // a=0, b=1, c=2, d=3, e=4,f=5, g=6, h=7, i=8, j=9 .....
                 number = Integer.parseInt(coordinates.substring(1, coordinates.length())) - 1;   // 1 => 0
             } catch (NumberFormatException e) {
-                System.out.println("use koord! vvedi esche ras");
+                System.out.println("Error! Error! Enter the coordinates again");
                 manuallyCreatePlayersShip(reader, countOfDecker, maxCountOfShip);
                 break;
             }
 
             if ((number < 0 || number > sizeOfField - 1 ) || (letter < 0 || letter > sizeOfField - 1)){
-                System.out.println("ot a do j b ot 1 do 10! vvedi esche ras");
+                System.out.println("From a to j or from 1 to 10! Enter the coordinates again");
                 manuallyCreatePlayersShip(reader, countOfDecker, maxCountOfShip);
                 break;
             }
@@ -204,7 +200,7 @@ public class Battle {
                     char direction = param[1].charAt(0);
 
                     if (direction != 'n' && direction != 'e' && direction != 's' && direction != 'w'){
-                        System.out.println("vvedi tolko tak, e - east, s - south, w - west");
+                        System.out.println("Enter according to example, e - east, s - south, w - west");
                         manuallyCreatePlayersShip(reader, countOfDecker, maxCountOfShip);
                         break;
                     }
@@ -214,7 +210,7 @@ public class Battle {
                     printPlayersField();
                     countOfShip = countOfDecker == 2 ? PlayersShips.countOfDestroyer : countOfDecker == 3 ? PlayersShips.countOfCruiser : PlayersShips.countOfBattleShip;
                 } else {
-                    System.out.println("zabul napisat, vvedi esche ras");
+                    System.out.println("Forgot to write, enter again");
                     manuallyCreatePlayersShip(reader, countOfDecker, maxCountOfShip);
                     break;
                 }
@@ -293,11 +289,11 @@ public class Battle {
         if (playerField[fireLetter][fireNumber] == space) {
             playerField[fireLetter][fireNumber] = fail;
             printTheField();
-            System.out.println("ne popal " + (char)(fireNumber + 97) + "" + (fireLetter + 1));
+            System.out.println("Computer missed \n" + (char)(fireNumber + 97) + "" + (fireLetter + 1));
         } else if (playerField[fireLetter][fireNumber] == ship) {
             playerField[fireLetter][fireNumber] = hit;
             printTheField();
-            System.out.println("ranil " + (char)(fireNumber + 97) + "" + (fireLetter + 1) + "!");
+            System.out.println("Computer wounded \n" + (char)(fireNumber + 97) + "" + (fireLetter + 1) + "!");
 /***/            Thread.sleep(2000);
             for(PlayersShips playersShip: PlayersShips.shipsList) {
                 for (int j = 0; j < playersShip.coordinates.length; j++ ) {
@@ -312,11 +308,11 @@ public class Battle {
 
                             playersShip.areaAroundTheShip();
                             printTheField();
-                            System.out.println("ubil");
+                            System.out.println("Killed");
                             PlayersShips.countAliveShip--;
 
                             if(PlayersShips.countAliveShip == 0) {
-                                System.out.println("proebal");
+                                System.out.println("Lose");
                                 return;
                             }
                         }
@@ -338,7 +334,7 @@ public class Battle {
         int fireNumber;
         int fireLetter;
         while (true) {
-            System.out.print("ogon: ");
+            System.out.print("Fire: ");
             String fire = reader.readLine();
 
 
@@ -351,8 +347,8 @@ public class Battle {
                 if ((fireNumber > -1 && fireNumber < sizeOfField )
                         && (fireLetter > -1 && fireLetter < sizeOfField)) {
                     break;
-                } else System.out.println("koords ne te");
-            } else System.out.println("koords ne te");
+                } else System.out.println("Wrong coordinates");
+            } else System.out.println("Wrong coordinates");
         }
 
         if (computerField[fireLetter][fireNumber] == space) {
@@ -361,7 +357,7 @@ public class Battle {
 
         } else if (computerField[fireLetter][fireNumber] == ship) {
             computerField[fireLetter][fireNumber] = hit;
-            System.out.println("popal");
+            System.out.println("You wounded");
             for(ComputersShips computer: ComputersShips.shipsList) {
                 for (int j = 0; j < computer.coordinates.length; j++ ) {
                     int shipNumber = computer.coordinates[j].number;
@@ -374,11 +370,11 @@ public class Battle {
                                     ComputersShips.countOfCruiser-- : ComputersShips.countOfBattleShip--;
 
                             computer.areaAroundTheShip();
-                            System.out.println("ubil");
+                            System.out.println("You killed");
                             ComputersShips.countAliveShip--;
 
                             if(ComputersShips.countAliveShip == 0) {
-                                System.out.println("pobeda");
+                                System.out.println( player1Name + "You won!!");
                                 printTheField();
                                 return;
                             }
@@ -386,12 +382,12 @@ public class Battle {
                     }
                 }
             }
-            System.out.println("esche raz");
+            System.out.println("Shoot again");
             playerFireAndCheck(reader);
 
         } else if (computerField[fireLetter][fireNumber] == hit
                 || computerField[fireLetter][fireNumber] == fail) {
-            System.out.println("esche raz uje bulo");
+            System.out.println("Once again, you've already shot here");
             playerFireAndCheck(reader);
         }
     }
@@ -486,7 +482,9 @@ public class Battle {
 
     private static void multigamep1()
     {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+
+
+        /*try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String answer;
             while (true) {
 
@@ -500,15 +498,15 @@ public class Battle {
                 } else
 
                     generatePlayers1Ships();
-                    generateEnemyShips();
+                    //generateEnemyShips();
             }
 
         } catch (IOException e)
         {
             throw new RuntimeException(e);
-        }
+        }*/
     }
-    private static void generateEnemyShips()
+    /*private static void generateEnemyShips()
     {
         for (int i = 0; i < sizeOfField; i++) {
             for (int j = 0; j < sizeOfField; j++) {
@@ -519,5 +517,5 @@ public class Battle {
         createPlayersShip(3, maxCountOfCruiser);                               //generate Cruisers
         createPlayersShip(2, maxCountOfDestroyer);                             //generate Destroyers
         createPlayersShip(1, maxCountOfSubmarine);                             //generate Submarines
-    }
+    }*/
 }
