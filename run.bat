@@ -1,1 +1,0 @@
-java -jar src/battleship/battle.java
