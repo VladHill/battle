@@ -1,1 +1,0 @@
-This is beta version of my first game.
