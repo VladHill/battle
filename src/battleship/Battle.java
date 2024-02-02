@@ -447,7 +447,7 @@ public class Battle {
                     cp.print(']', Attribute.NONE, FColor.BLUE, BColor.BLUE);
                 } else {
                     cp.print('[', Attribute.NONE, FColor.BLUE, BColor.WHITE);
-                    cp.print(cross, Attribute.NONE, FColor.GREEN, BColor.WHITE);
+                    cp.print(cross, Attribute.NONE, FColor.BLACK, BColor.WHITE);
                     cp.print(']', Attribute.NONE, FColor.BLUE, BColor.WHITE);
                 }
                 cp.clear();
@@ -468,7 +468,7 @@ public class Battle {
                     cp.print(']', Attribute.NONE, FColor.BLUE, BColor.BLUE);
                 } else {
                     cp.print('[', Attribute.NONE, FColor.BLUE, BColor.WHITE);
-                    cp.print(cross, Attribute.NONE, FColor.GREEN, BColor.WHITE);
+                    cp.print(cross, Attribute.NONE, FColor.BLACK, BColor.WHITE);
                     cp.print(']', Attribute.NONE, FColor.BLUE, BColor.WHITE);
                 }
             }
